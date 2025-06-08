@@ -20,7 +20,7 @@ app.use(express.json())
 
 //routes
 app.use('/api/users', userRoutes);  
-// app.use('/api/menu', menuRoutes);
+app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 // app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin', adminRoutes);

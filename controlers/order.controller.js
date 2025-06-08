@@ -1,6 +1,4 @@
 const Order = require('../models/order.model');
-const User = require('../models/user.model');
-const Admin = require('../models/admin.model');
 
 exports.placeOrder = async (req, res) => {
   const { items, orderType, bulkOrder, deliveryAddress, paymentMethod, totalAmount } = req.body;
