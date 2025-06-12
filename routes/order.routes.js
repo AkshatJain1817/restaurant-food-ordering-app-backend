@@ -5,6 +5,8 @@ const {
     placeNormalOrder,
     placeBulkOrder,
     getAllOrders,
+    getBulkOrders,
+    getNormalOrders,
     getUserOrders,
     updateOrderStatus,
     deleteOrder,
@@ -22,6 +24,8 @@ router.delete('/deleteOrder/:id', userProtect, deleteOrder);
 router.put('/editOrder/:id', userProtect, editOrder);
 
 //order routes for admin
+router.get('/getNormalOrders', adminProtect, getNormalOrders);
+router.get('/getBulkOrders', adminProtect, getBulkOrders);
 router.get('/getAllOrders', adminProtect, getAllOrders);
 router.patch('/updateOrderStatus/:id', adminProtect, updateOrderStatus);
 

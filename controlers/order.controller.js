@@ -62,6 +62,26 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
+exports.getNormalOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ 'bulkOrder.isBulk': false }).populate('userId items.menuItemId');
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching normal orders:', error);
+    res.status(500).json({ message: 'Server error while fetching normal orders' });
+  }
+};
+
+exports.getBulkOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ 'bulkOrder.isBulk': true }).populate('userId items.menuItemId');
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching bulk orders:', error);
+    res.status(500).json({ message: 'Server error while fetching bulk orders' });
+  }
+}
+
 exports.getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user._id })
