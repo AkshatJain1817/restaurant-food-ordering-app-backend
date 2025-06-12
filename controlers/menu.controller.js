@@ -17,7 +17,7 @@ exports.createMenuItem = async (req, res) => {
   try {
     const menuItemData = {
       ...req.body,
-      imageUrl: req.file?.path || '' // Save Cloudinary URL to imageUrl field
+      imageUrl: req.file?.path || '' 
     };
 
     const menuItem = new MenuItem(menuItemData);
