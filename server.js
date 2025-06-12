@@ -12,6 +12,7 @@ const adminRoutes = require('./routes/admin.routes');
 const menuRoutes = require('./routes/menu.routes');
 const orderRoutes = require('./routes/order.routes');
 const reviewRoutes = require('./routes/review.routes');
+const cartRoutes = require('./routes/cart.routes');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/cart', cartRoutes);
 
 const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {

@@ -10,6 +10,7 @@ const {
     getUserOrders,
     updateOrderStatus,
     deleteOrder,
+    placeOrderFromCart,
     editOrder
 } = require('../controlers/order.controller');
 const userProtect = require('../middleware/auth.middleware');
@@ -22,6 +23,7 @@ router.post('/placeBulkOrder', userProtect, placeBulkOrder);
 router.get('/getUserOrders', userProtect, getUserOrders);
 router.delete('/deleteOrder/:id', userProtect, deleteOrder);
 router.put('/editOrder/:id', userProtect, editOrder);
+router.post('/placeOrderFromCart', userProtect, placeOrderFromCart);
 
 //order routes for admin
 router.get('/getNormalOrders', adminProtect, getNormalOrders);

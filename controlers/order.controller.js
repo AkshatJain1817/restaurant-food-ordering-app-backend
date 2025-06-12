@@ -1,4 +1,52 @@
 const Order = require('../models/order.model');
+// const MenuItem = require('../models/menuItem.model');
+const Cart = require('../models/cart.model');
+const MenuItem = require('../models/menu.model'); // Assuming this is the correct path to your MenuItem model
+
+async function calculateTotal(cartItems) {
+  let total = 0;
+
+  for (let item of cartItems) {
+    const menuItem = await MenuItem.findById(item.menuItemId);
+    if (menuItem) {
+      total += item.quantity * menuItem.price;
+    }
+  }
+
+  return total;
+}
+
+exports.placeOrderFromCart = async (req, res) => {
+  const userId = req.user._id;
+  const { orderType, deliveryAddress, paymentMethod } = req.body;
+
+  try {
+    const cart = await Cart.findOne({ userId });
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const totalAmount = await calculateTotal(cart.items); // See helper function below
+
+    const order = new Order({
+      userId,
+      items: cart.items,
+      orderType,
+      deliveryAddress,
+      paymentMethod,
+      totalAmount,
+      bulkOrder: { isBulk: false } // normal order
+    });
+
+    const savedOrder = await order.save();
+    await Cart.findOneAndUpdate({ userId }, { items: [] }); // Clear cart after order
+
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.placeNormalOrder = async (req, res) => {
   const { items, orderType, deliveryAddress, paymentMethod, totalAmount } = req.body;
