@@ -1,15 +1,35 @@
 const MenuItem = require('../models/menu.model.js');
 
+// exports.createMenuItem = async (req, res) => {
+//   try {
+//     const menuItem = new MenuItem(req.body);
+//     const savedItem = await menuItem.save();
+//     res.status(201).json(savedItem);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server error while creating menu item' });
+//   }
+// };
+
+// const MenuItem = require('../models/menuItem.model');
+
 exports.createMenuItem = async (req, res) => {
   try {
-    const menuItem = new MenuItem(req.body);
+    const menuItemData = {
+      ...req.body,
+      imageUrl: req.file?.path || '' // Save Cloudinary URL to imageUrl field
+    };
+
+    const menuItem = new MenuItem(menuItemData);
     const savedItem = await menuItem.save();
+
     res.status(201).json(savedItem);
   } catch (error) {
-    console.error(error);
+    console.error('Error creating menu item:', error);
     res.status(500).json({ message: 'Server error while creating menu item' });
   }
 };
+
 
 exports.getAllMenuItems = async (req, res) => {
   try {

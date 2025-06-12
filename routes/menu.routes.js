@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/upload');
 const {
   createMenuItem,
   getAllMenuItems,
@@ -14,7 +15,7 @@ router.get('/getMenuItems', getAllMenuItems);
 router.get('/getMenuItem/:id', getMenuItemById);
 
 // Menu routes for admin
-router.post('/createMenuItem', adminProtect, createMenuItem);
+router.post('/createMenuItem', adminProtect, upload.single('image'), createMenuItem);
 router.put('/updateMenuItem/:id', adminProtect, updateMenuItem);
 router.delete('/deleteMenuItem/:id', adminProtect, deleteMenuItem);
 
