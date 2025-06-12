@@ -1,7 +1,6 @@
 const Order = require('../models/order.model');
-// const MenuItem = require('../models/menuItem.model');
 const Cart = require('../models/cart.model');
-const MenuItem = require('../models/menu.model'); // Assuming this is the correct path to your MenuItem model
+const MenuItem = require('../models/menu.model'); 
 
 async function calculateTotal(cartItems) {
   let total = 0;
@@ -26,7 +25,7 @@ exports.placeOrderFromCart = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty' });
     }
 
-    const totalAmount = await calculateTotal(cart.items); // See helper function below
+    const totalAmount = await calculateTotal(cart.items); 
 
     const order = new Order({
       userId,
@@ -35,11 +34,11 @@ exports.placeOrderFromCart = async (req, res) => {
       deliveryAddress,
       paymentMethod,
       totalAmount,
-      bulkOrder: { isBulk: false } // normal order
+      bulkOrder: { isBulk: false }
     });
 
     const savedOrder = await order.save();
-    await Cart.findOneAndUpdate({ userId }, { items: [] }); // Clear cart after order
+    await Cart.findOneAndUpdate({ userId }, { items: [] }); 
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -59,7 +58,7 @@ exports.placeNormalOrder = async (req, res) => {
       paymentMethod,
       totalAmount,
       deliveryAddress,
-      bulkOrder: { isBulk: false } // Ensure it's marked as non-bulk
+      bulkOrder: { isBulk: false } 
     });
 
     const savedOrder = await order.save();
@@ -84,7 +83,7 @@ exports.placeBulkOrder = async (req, res) => {
       bulkOrder: {
         ...bulkOrder,
         isBulk: true,
-        confirmed: false // Default, can be updated by admin later
+        confirmed: false 
       }
     });
 
@@ -101,7 +100,6 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
       .populate('userId', 'email') 
-      // .populate('items.menuItemId', 'name price');
 
     res.status(200).json(orders);
   } catch (error) {
@@ -133,7 +131,7 @@ exports.getBulkOrders = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user._id })
-      // .populate('items.menuItemId', 'name price');
+     
     res.status(200).json(orders);
   } catch (error) {
     console.error(error);
