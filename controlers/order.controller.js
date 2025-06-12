@@ -1,26 +1,53 @@
 const Order = require('../models/order.model');
 
-exports.placeOrder = async (req, res) => {
-  const { items, orderType, bulkOrder, deliveryAddress, paymentMethod, totalAmount } = req.body;
+exports.placeNormalOrder = async (req, res) => {
+  const { items, orderType, deliveryAddress, paymentMethod, totalAmount } = req.body;
 
   try {
     const order = new Order({
-      userId: req.user._id,  // Assuming user middleware sets req.user
+      userId: req.user._id,
       items,
       orderType,
-      bulkOrder,
-      deliveryAddress,
       paymentMethod,
-      totalAmount
+      totalAmount,
+      deliveryAddress,
+      bulkOrder: { isBulk: false } // Ensure it's marked as non-bulk
     });
 
     const savedOrder = await order.save();
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error while placing order' });
+    res.status(500).json({ message: 'Server error while placing normal order' });
   }
 };
+
+exports.placeBulkOrder = async (req, res) => {
+  const { items, orderType, deliveryAddress, paymentMethod, totalAmount, bulkOrder } = req.body;
+
+  try {
+    const order = new Order({
+      userId: req.user._id,
+      items,
+      orderType,
+      deliveryAddress,
+      paymentMethod,
+      totalAmount,
+      bulkOrder: {
+        ...bulkOrder,
+        isBulk: true,
+        confirmed: false // Default, can be updated by admin later
+      }
+    });
+
+    const savedOrder = await order.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while placing bulk order' });
+  }
+};
+
 
 exports.getAllOrders = async (req, res) => {
   try {
