@@ -1,6 +1,6 @@
 const Order = require('../models/order.model');
 const Cart = require('../models/cart.model');
-const MenuItem = require('../models/menu.model'); 
+const MenuItem = require('../models/menu.model');
 
 async function calculateTotal(cartItems) {
   let total = 0;
@@ -25,7 +25,7 @@ exports.placeOrderFromCart = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty' });
     }
 
-    const totalAmount = await calculateTotal(cart.items); 
+    const totalAmount = await calculateTotal(cart.items);
 
     const order = new Order({
       userId,
@@ -38,7 +38,7 @@ exports.placeOrderFromCart = async (req, res) => {
     });
 
     const savedOrder = await order.save();
-    await Cart.findOneAndUpdate({ userId }, { items: [] }); 
+    await Cart.findOneAndUpdate({ userId }, { items: [] });
 
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -58,7 +58,7 @@ exports.placeNormalOrder = async (req, res) => {
       paymentMethod,
       totalAmount,
       deliveryAddress,
-      bulkOrder: { isBulk: false } 
+      bulkOrder: { isBulk: false }
     });
 
     const savedOrder = await order.save();
@@ -83,7 +83,7 @@ exports.placeBulkOrder = async (req, res) => {
       bulkOrder: {
         ...bulkOrder,
         isBulk: true,
-        confirmed: false 
+        confirmed: false
       }
     });
 
@@ -99,7 +99,7 @@ exports.placeBulkOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate('userId', 'email') 
+      .populate('userId', 'email')
 
     res.status(200).json(orders);
   } catch (error) {
@@ -131,7 +131,11 @@ exports.getBulkOrders = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user._id })
-     
+      .populate({
+        path: 'items.menuItemId',
+        select: 'name imageUrl' 
+      });
+
     res.status(200).json(orders);
   } catch (error) {
     console.error(error);
