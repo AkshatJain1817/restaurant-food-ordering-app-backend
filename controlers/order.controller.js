@@ -133,7 +133,7 @@ exports.getUserOrders = async (req, res) => {
     const orders = await Order.find({ userId: req.user._id })
       .populate({
         path: 'items.menuItemId',
-        select: 'name imageUrl' 
+        select: 'name imageUrl price' 
       });
 
     res.status(200).json(orders);
