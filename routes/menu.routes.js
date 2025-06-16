@@ -6,13 +6,15 @@ const {
   getAllMenuItems,
   getMenuItemById,
   updateMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
+  getMenuItemsByCategory
 } = require('../controlers/menu.controller');
 const adminProtect = require('../middleware/admin.middleware');
 
 // Menu routes for public
 router.get('/getMenuItems', getAllMenuItems);
 router.get('/getMenuItem/:id', getMenuItemById);
+router.get('/getMenuItemsByCategory/:category', getMenuItemsByCategory);
 
 // Menu routes for admin
 router.post('/createMenuItem', adminProtect, upload.single('image'), createMenuItem);

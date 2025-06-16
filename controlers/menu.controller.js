@@ -41,6 +41,26 @@ exports.getAllMenuItems = async (req, res) => {
   }
 };
 
+exports.getMenuItemsByCategory = async (req, res) => {
+  try{
+    const { category } = req.params;
+
+    const menuItems = await MenuItem.find({ category});
+
+    if (menuItems.length === 0) {
+      return res.status(404).json({ message: 'No menu items found for this category' });
+    }
+
+    res.status(200).json({
+      message: `Items in category: ${category}`,
+      data: menuItems
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching menu items by category' });
+  }
+}
+
 exports.getMenuItemById = async (req, res) => {
   try {
     const menuItem = await MenuItem.findById(req.params.id);
